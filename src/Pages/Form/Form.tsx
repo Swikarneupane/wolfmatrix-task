@@ -24,16 +24,19 @@ const Form = () => {
   const updateChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    if (e.target.name === "phoneNumber" && !phoneRegex.test(e.target.value)) {
-      setStatus("error")
-      return
+    const { name, value } = e.target
+
+    if (name === "phoneNumber") {
+      setForm((prev) => ({
+        ...prev,
+        [name]: value,
+      }))
     } else {
-      setStatus("completed")
+      setForm((prev) => ({
+        ...prev,
+        [name]: value,
+      }))
     }
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    })
   }
 
   const handlePhoneNumberValidation = (
@@ -41,42 +44,20 @@ const Form = () => {
   ) => {
     const phoneValue = e.target.value
 
-    if (phoneValue === "") {
+    if (phoneValue === "" || phoneRegex.test(phoneValue)) {
       setStatus("completed")
-      return
-    }
-    if (e.target.name === "phoneNumber" && !phoneRegex.test(e.target.value)) {
-      setStatus("error")
     } else {
-      setStatus("completed")
+      setStatus("error")
     }
-
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    })
   }
-
-  //   const handlePhoneNumberValidation = (
-  //     e: React.FocusEvent<HTMLInputElement>
-  //   ) => {
-  //     if (e.target.name === "phoneNumber" && !phoneRegex.test(e.target.value)) {
-  //       alert("Invalid phone number format")
-  //       return
-  //     }
-
-  //     setForm({
-  //       ...form,
-  //       [e.target.name]: e.target.value,
-  //     })
-  //   }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log(form)
+    console.log("Form final details: ", form)
     if (!phoneRegex.test(form.phoneNumber)) {
       setStatus("error")
       alert("Please enter a valid phone number")
+      setCount(1)
       return
     }
     alert("Form submitted successfully")
@@ -99,10 +80,10 @@ const Form = () => {
   }
 
   return (
-    <div className="md:w-[60%] mx-auto">
+    <div className="md:w-[60%] md:mx-auto mx-5">
       <form
         onSubmit={handleSubmit}
-        className="border rounded-sm border-red-300  px-10 py-5 flex flex-col gap-5">
+        className="border rounded-sm border-gray-300 px-3 sm:px-10 py-5 flex flex-col gap-5">
         <p className="text-center text-lg font-medium">Step {count} of 3</p>
         {count === 1 && (
           <>
@@ -116,7 +97,7 @@ const Form = () => {
                 onChange={updateChange}
                 type="text"
                 value={form.firstName}
-                className="border border-red-300 outline-none p-1"
+                className="border border-gray-300 outline-none p-1"
                 required
               />
             </div>
@@ -129,7 +110,7 @@ const Form = () => {
                 name="middleName"
                 value={form.middleName}
                 type="text"
-                className="border border-red-300 outline-none p-1"
+                className="border border-gray-300 outline-none p-1"
                 onChange={updateChange}
               />
             </div>
@@ -142,7 +123,7 @@ const Form = () => {
                 type="text"
                 value={form.lastName}
                 name="lastName"
-                className="border border-red-300 outline-none p-1"
+                className="border border-gray-300 outline-none p-1"
                 onChange={updateChange}
                 required
               />
@@ -157,7 +138,7 @@ const Form = () => {
                 value={form.age ? form.age : ""}
                 required
                 onChange={updateChange}
-                className="border border-red-300 outline-none p-1"
+                className="border border-gray-300 outline-none p-1"
                 type="number"
               />
             </div>
@@ -165,12 +146,11 @@ const Form = () => {
               <label htmlFor="gender" className="font-medium">
                 Gender
               </label>
-              {/* <input id="gender" name="gender" onChange={updateChange} /> */}
               <select
                 value={form.gender}
                 onChange={updateChange}
                 id="gender"
-                className="border border-red-300 outline-none p-1 text-sm"
+                className="border border-gray-300 outline-none p-1 text-sm"
                 name="gender">
                 <option value="" disabled className="text-sm">
                   Select a gender
@@ -197,14 +177,18 @@ const Form = () => {
                 id="phoneNumber"
                 placeholder="+1234567890"
                 required
-                className="border border-red-300 outline-none p-1"
+                className="border border-gray-300 outline-none p-1"
                 type="tel"
                 value={form.phoneNumber}
                 name="phoneNumber"
-                // onChange={updateChange}
-                onChange={handlePhoneNumberValidation}
+                onChange={updateChange}
+                onBlur={handlePhoneNumberValidation}
               />
-              {status === "error" && <p>Phone number format incorrect</p>}
+              {status === "error" && (
+                <p className="text-sm text-red-700">
+                  Phone number format incorrect
+                </p>
+              )}
             </div>
           </>
         )}
@@ -216,7 +200,7 @@ const Form = () => {
               </label>
               <input
                 id="companyName"
-                className="border border-red-300 outline-none p-1"
+                className="border border-gray-300 outline-none p-1"
                 type="text"
                 value={form.companyName}
                 name="companyName"
@@ -232,7 +216,7 @@ const Form = () => {
                 id="companyAddress"
                 name="companyAddress"
                 value={form.companyAddress}
-                className="border border-red-300 outline-none p-1"
+                className="border border-gray-300 outline-none p-1"
                 type="text"
                 onChange={updateChange}
                 required
@@ -246,7 +230,7 @@ const Form = () => {
                 id="jobTitle"
                 value={form.jobTitle}
                 type="text"
-                className="border border-red-300 outline-none p-1"
+                className="border border-gray-300 outline-none p-1"
                 name="jobTitle"
                 onChange={updateChange}
                 required
@@ -264,7 +248,7 @@ const Form = () => {
                 id="province"
                 type="text"
                 value={form.province}
-                className="border border-red-300 outline-none p-1"
+                className="border border-gray-300 outline-none p-1"
                 name="province"
                 onChange={updateChange}
                 required
@@ -278,7 +262,7 @@ const Form = () => {
                 id="district"
                 value={form.district}
                 type="text"
-                className="border border-red-300 outline-none p-1"
+                className="border border-gray-300 outline-none p-1"
                 name="district"
                 onChange={updateChange}
                 required
@@ -292,7 +276,7 @@ const Form = () => {
                 id="localMunicipality"
                 type="text"
                 value={form.localMunicipality}
-                className="border border-red-300 outline-none p-1"
+                className="border border-gray-300 outline-none p-1"
                 name="localMunicipality"
                 onChange={updateChange}
                 required
@@ -306,7 +290,7 @@ const Form = () => {
                 id="streetAddress"
                 value={form.streetAddress}
                 type="text"
-                className="border border-red-300 outline-none p-1"
+                className="border border-gray-300 outline-none p-1"
                 name="streetAddress"
                 onChange={updateChange}
               />
@@ -316,7 +300,7 @@ const Form = () => {
         {count === 3 && (
           <button
             type="submit"
-            className="border-red-300 border py-2 w-max mx-auto px-5 hover:bg-red-300 cursor-pointer duration-300">
+            className="border-gray-300 border py-2 w-max mx-auto px-5 hover:bg-gray-300 cursor-pointer duration-300">
             Submit
           </button>
         )}
@@ -325,13 +309,13 @@ const Form = () => {
         <button
           onClick={() => setCount(count - 1)}
           disabled={count < 2}
-          className="border-red-300 border py-2 w-max px-5 hover:bg-red-300 cursor-pointer duration-300 disabled:cursor-not-allowed">
+          className="border-gray-300 border py-2 w-max px-5 hover:bg-gray-300 cursor-pointer duration-300 disabled:cursor-not-allowed">
           Back
         </button>
         <button
           onClick={() => setCount(count + 1)}
           disabled={count > 2}
-          className="border-red-300 border py-2 w-max px-5 hover:bg-red-300 cursor-pointer duration-300 disabled:cursor-not-allowed">
+          className="border-gray-300 border py-2 w-max px-5 hover:bg-gray-300 cursor-pointer duration-300 disabled:cursor-not-allowed">
           Next
         </button>
       </div>

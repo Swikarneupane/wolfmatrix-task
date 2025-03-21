@@ -17,7 +17,8 @@ const Pagination = () => {
   const [loading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(10)
+
+  const totalPages = 20
 
   const itemsPerPage = 10
 
@@ -29,9 +30,7 @@ const Pagination = () => {
 by_name=${searchTerm}&page=${currentPage}&per_page=${itemsPerPage}}`
       )
 
-      console.log("response: ", response.data)
       setBreweryData(response.data)
-      //   setTotalPages(Math.ceil(response.data.length / itemsPerPage))
     } catch (error) {
       console.error("brewery data: ", error)
     } finally {
@@ -46,9 +45,7 @@ by_name=${searchTerm}&page=${currentPage}&per_page=${itemsPerPage}}`
         `https://api.openbrewerydb.org/v1/breweries?page=${currentPage}&per_page=${itemsPerPage}`
       )
 
-      console.log("response: ", response.data)
       setBreweryData(response.data)
-      //   setTotalPages(Math.ceil(response.data.length / itemsPerPage))
     } catch (error) {
       console.error("brewery data: ", error)
     } finally {
@@ -57,20 +54,18 @@ by_name=${searchTerm}&page=${currentPage}&per_page=${itemsPerPage}}`
   }
 
   useEffect(() => {
-    // getData(currentPage, searchTerm)
     getTotalData(currentPage, itemsPerPage)
   }, [currentPage, itemsPerPage])
 
   useEffect(() => {
     getData(currentPage, searchTerm)
-    // getTotalData(currentPage, itemsPerPage)
   }, [currentPage, searchTerm])
 
   console.log(breweryData)
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value)
-    setCurrentPage(1) // Reset to the first page when searching
+    setCurrentPage(1)
   }
 
   const handlePageChange = (direction: string) => {
@@ -82,7 +77,7 @@ by_name=${searchTerm}&page=${currentPage}&per_page=${itemsPerPage}}`
   }
 
   return (
-    <div className="md:w-[70%] mx-auto mx-5 flex flex-col gap-5 px-5 py-3">
+    <div className="md:w-[70%] md:mx-auto mx-5 flex flex-col gap-5 sm:px-5 py-8 shadow px-2">
       <div className="flex text-sm ">
         <label htmlFor="search" className="mr-5">
           Search:{" "}
@@ -91,7 +86,7 @@ by_name=${searchTerm}&page=${currentPage}&per_page=${itemsPerPage}}`
           type="text"
           value={searchTerm}
           onChange={handleSearchChange}
-          className="border border-red-300 outline-none px-2 py-1 w-full"
+          className="border border-gray-300 outline-none px-2 py-1 w-full"
         />
       </div>
 
@@ -101,59 +96,65 @@ by_name=${searchTerm}&page=${currentPage}&per_page=${itemsPerPage}}`
         </div>
       ) : (
         <>
-          <table className="border border-red-300">
-            <thead>
-              <tr className="text-sm xl:text-lg">
-                <th className="border-b border-r border-red-300 px-2">Name</th>
-                <th className="border-b border-r border-red-300 px-2">
-                  Brewery Type
-                </th>
-                <th className="border-b border-r border-red-300 px-2">
-                  Address
-                </th>
-                <th className="border-b border-r border-red-300 px-2">
-                  Phone Number
-                </th>
-                <th className="border-b  border-red-300 px-2">Website</th>
-              </tr>
-            </thead>
-            <tbody>
-              {breweryData.map((item, i) => (
-                <tr key={i} className="text-sm text-center xl:text-base">
-                  <td className="border-b border-r border-red-300 px-2">
-                    {item.name}
-                  </td>
-                  <td className="border-b border-r border-red-300 px-2">
-                    {item.brewery_type}
-                  </td>
-                  <td className="border-b border-r border-red-300 px-2">
-                    {item.street}, {item.city}, {item.state}
-                  </td>
-                  <td className="border-b border-r border-red-300 px-2">
-                    {item.phone}
-                  </td>
-                  <td className="border-b border-r border-r-red-300 border-red-300 px-2">
-                    <a href={item.website_url} target="_blank">
-                      Link
-                    </a>
-                  </td>
+          <div className="overflow-x-auto w-full">
+            <table className="border border-gray-300 w-full mb-5">
+              <thead className="bg-gray-200">
+                <tr className="text-sm xl:text-lg">
+                  <th className="border-b border-r  border-gray-300 px-2">
+                    Name
+                  </th>
+                  <th className="border-b border-r py-1 border-gray-300 px-2">
+                    Brewery Type
+                  </th>
+                  <th className="border-b border-r border-gray-300 px-2">
+                    Address
+                  </th>
+                  <th className="border-b border-r border-gray-300 px-2">
+                    Phone Number
+                  </th>
+                  <th className="border-b  border-gray-300 px-2">Website</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-
+              </thead>
+              <tbody>
+                {breweryData.map((item, i) => (
+                  <tr key={i} className="text-sm text-center xl:text-base">
+                    <td className="border-b border-r border-gray-300 px-2">
+                      {item.name}
+                    </td>
+                    <td className="border-b border-r border-gray-300 px-2 capitalize">
+                      {item.brewery_type}
+                    </td>
+                    <td className="border-b border-r border-gray-300 px-2 py-1">
+                      {item.street}, {item.city}, {item.state}
+                    </td>
+                    <td className="border-b border-r border-gray-300 px-2">
+                      {item.phone}
+                    </td>
+                    <td className="border-b border-r border-r-gray-300 border-gray-300 px-2">
+                      <a
+                        href={item.website_url}
+                        target="_blank"
+                        className="underline hover:opacity-60 cursor-pointer">
+                        Link
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           <div className="flex justify-between items-center text-sm">
             <button
               onClick={() => handlePageChange("prev")}
               disabled={currentPage === 1}
-              className="disabled:cursor-not-allowed border border-red-300 px-5 py-2 cursor-pointer">
+              className="disabled:cursor-not-allowed border border-gray-300 px-5 py-2 cursor-pointer">
               Previous
             </button>
             <p>Page {currentPage}</p>
             <button
               onClick={() => handlePageChange("next")}
               disabled={currentPage === totalPages}
-              className="disabled:cursor-not-allowed border border-red-300 px-5 py-2 cursor-pointer">
+              className="disabled:cursor-not-allowed border border-gray-300 px-5 py-2 cursor-pointer">
               Next
             </button>
           </div>

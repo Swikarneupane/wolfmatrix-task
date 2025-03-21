@@ -1,13 +1,12 @@
-import React from "react"
 import { Outlet } from "react-router-dom"
 import { Link } from "react-router-dom"
 
 const Home = () => {
   return (
     <>
-      <div className="text-center py-3">
+      <div className="text-center py-3 text-lg shadow mb-5">
         <nav>
-          <ul className="flex gap-10 w-max mx-auto text-sm">
+          <ul className="flex gap-10 w-max mx-auto text-sm sm:text-lg">
             <li className="cursor-pointer">
               <Link to="/ecommerce">Ecommerce</Link>
             </li>
