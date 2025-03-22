@@ -21,6 +21,43 @@ const Form = () => {
 
   const phoneRegex = /^\+?[1-9]\d{1,14}$/
 
+  const [errors, setErrors] = useState<{ [key: string]: string }>({})
+
+  const validate = () => {
+    const newErrors: { [key: string]: string } = {}
+    if (count === 1) {
+      if (!form.firstName) newErrors.firstName = "First Name is required"
+      if (!form.lastName) newErrors.lastName = "Last Name is required"
+      if (!form.age) newErrors.age = "Age is required"
+      if (!form.phoneNumber) newErrors.phoneNumber = "Phone Number is required"
+    }
+    if (count === 2) {
+      if (!form.companyName) newErrors.companyName = "Company Name is required"
+      if (!form.companyAddress)
+        newErrors.companyAddress = "Company Address  is required"
+      if (!form.jobTitle) newErrors.jobTitle = "Job Title is required"
+    }
+    if (count === 3) {
+      if (!form.province) newErrors.province = "Province is required"
+      if (!form.district) newErrors.district = "District is required"
+      if (!form.localMunicipality)
+        newErrors.localMunicipality = "Local Municipality is required"
+    }
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handleStepUp = () => {
+    if (validate()) {
+      setCount(count + 1)
+    }
+  }
+  const handleStepDown = () => {
+    if (validate()) {
+      setCount(count - 1)
+    }
+  }
+
   const updateChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -100,6 +137,9 @@ const Form = () => {
                 className="border border-gray-300 outline-none p-1"
                 required
               />
+              {errors.firstName && (
+                <p className="text-red-600 text-sm">{errors.firstName}</p>
+              )}
             </div>
             <div className="flex flex-col ">
               <label htmlFor="middleName" className="font-medium">
@@ -127,6 +167,9 @@ const Form = () => {
                 onChange={updateChange}
                 required
               />
+              {errors.lastName && (
+                <p className="text-red-600 text-sm">{errors.lastName}</p>
+              )}
             </div>
             <div className="flex flex-col ">
               <label htmlFor="age" className="font-medium">
@@ -141,6 +184,9 @@ const Form = () => {
                 className="border border-gray-300 outline-none p-1"
                 type="number"
               />
+              {errors.age && (
+                <p className="text-red-600 text-sm">{errors.age}</p>
+              )}
             </div>
             <div className="flex flex-col ">
               <label htmlFor="gender" className="font-medium">
@@ -189,6 +235,9 @@ const Form = () => {
                   Phone number format incorrect
                 </p>
               )}
+              {errors.phoneNumber && (
+                <p className="text-red-600 text-sm">{errors.phoneNumber}</p>
+              )}
             </div>
           </>
         )}
@@ -207,6 +256,9 @@ const Form = () => {
                 onChange={updateChange}
                 required
               />
+              {errors.companyName && (
+                <p className="text-red-600 text-sm">{errors.companyName}</p>
+              )}
             </div>
             <div className="flex flex-col ">
               <label htmlFor="companyAddress" className="font-medium">
@@ -221,6 +273,9 @@ const Form = () => {
                 onChange={updateChange}
                 required
               />
+              {errors.companyAddress && (
+                <p className="text-red-600 text-sm">{errors.companyAddress}</p>
+              )}
             </div>
             <div className="flex flex-col ">
               <label htmlFor="jobTitle" className="font-medium">
@@ -235,6 +290,9 @@ const Form = () => {
                 onChange={updateChange}
                 required
               />
+              {errors.jobTitle && (
+                <p className="text-red-600 text-sm">{errors.jobTitle}</p>
+              )}
             </div>
           </>
         )}
@@ -253,6 +311,9 @@ const Form = () => {
                 onChange={updateChange}
                 required
               />
+              {errors.province && (
+                <p className="text-red-600 text-sm">{errors.province}</p>
+              )}
             </div>
             <div className="flex flex-col ">
               <label htmlFor="district" className="font-medium">
@@ -267,6 +328,9 @@ const Form = () => {
                 onChange={updateChange}
                 required
               />
+              {errors.district && (
+                <p className="text-red-600 text-sm">{errors.district}</p>
+              )}
             </div>
             <div className="flex flex-col ">
               <label htmlFor="localMunicipality" className="font-medium">
@@ -281,6 +345,11 @@ const Form = () => {
                 onChange={updateChange}
                 required
               />
+              {errors.localMunicipality && (
+                <p className="text-red-600 text-sm">
+                  {errors.localMunicipality}
+                </p>
+              )}
             </div>
             <div className="flex flex-col ">
               <label htmlFor="streetAddress" className="font-medium">
@@ -307,13 +376,13 @@ const Form = () => {
       </form>
       <div className="flex justify-between mt-3">
         <button
-          onClick={() => setCount(count - 1)}
+          onClick={handleStepDown}
           disabled={count < 2}
           className="border-gray-300 border py-2 w-max px-5 hover:bg-gray-300 cursor-pointer duration-300 disabled:cursor-not-allowed">
           Back
         </button>
         <button
-          onClick={() => setCount(count + 1)}
+          onClick={handleStepUp}
           disabled={count > 2}
           className="border-gray-300 border py-2 w-max px-5 hover:bg-gray-300 cursor-pointer duration-300 disabled:cursor-not-allowed">
           Next
